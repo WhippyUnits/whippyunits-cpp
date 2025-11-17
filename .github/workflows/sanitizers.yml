@@ -1,0 +1,43 @@
+name: Sanitizers
+
+on: [pull_request, push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: asan
+            cmake-flags: -DCMAKE_BUILD_TYPE=Asan
+            ctest-env:
+          - name: tsan
+            cmake-flags: -DCMAKE_BUILD_TYPE=Tsan
+            ctest-env: TSAN_OPTIONS=second_deadlock_stack=1
+          - name: ubsan
+            cmake-flags: -DCMAKE_BUILD_TYPE=Ubsan
+            ctest-env:
+    name: "${{ matrix.name }}"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install LLVM 21
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21 all
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 200
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 200
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+          echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
+
+      - run: cmake -B build -S . ${{ matrix.cmake-flags }} -DBUILD_EXAMPLES=ON
+      - run: cmake --build build --target all --config RelWithDebInfo --parallel $(nproc)
+      - run: ${{ matrix.ctest-env }} ctest --test-dir build -C RelWithDebInfo --output-on-failure

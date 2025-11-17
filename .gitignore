@@ -1,0 +1,15 @@
+build*/
+.DS_Store
+
+# Visual Studio Code
+.vscode/settings.json
+
+# CMake
+CMakeUserPresets.json
+
+# compile_commands
+compile_commands.json
+
+# clangd cache
+.clangd/
+.cache/
