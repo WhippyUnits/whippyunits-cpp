@@ -9,19 +9,19 @@
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
 template <typename T>
-struct WithinAbs : Catch::Matchers::MatcherGenericBase {
-  WithinAbs(T target, T margin) : target{target}, margin{margin} {}
+struct WithinAbs: Catch::Matchers::MatcherGenericBase {
+    WithinAbs(T target, T margin) : target{target}, margin{margin} {}
 
-  bool match(const T& matchee) const {
-    using std::abs;
-    return abs(target - matchee) <= margin;
-  }
+    bool match(const T& matchee) const {
+        using std::abs;
+        return abs(target - matchee) <= margin;
+    }
 
-  std::string describe() const override {
-    return std::format("\n==\n{}", target);
-  }
+    std::string describe() const override {
+        return std::format("\n==\n{}", target);
+    }
 
- private:
-  T target;
-  T margin;
+    private:
+        T target;
+        T margin;
 };
