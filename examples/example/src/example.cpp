@@ -2,7 +2,7 @@
 
 #include "example.hpp"
 
-#include <whippyunits/whippyunits.hpp>
+#include <whippyunits/quantity.hpp>
 
 #ifndef RUNNING_TESTS
 int main() {}
