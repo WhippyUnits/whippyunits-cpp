@@ -1,3 +1,5 @@
+#pragma once
+
 #include <limits>
 
 namespace whippyunits::utils {
@@ -33,7 +35,8 @@ namespace whippyunits::utils {
      * @param exp integer exponent
      * @returns `x ^ exp` when `exp` isn't the integer minimum, 0.0
      */
-    inline constexpr double constexpr_pow(double x, int exp) {
+    template<typename T>
+    inline constexpr T constexpr_pow(T x, int exp) {
         // rare edge case, when exp == int::min(), -exp is itself. return 0.0
         if(exp == std::numeric_limits<int>::min()) { return 0.0; }
         if(exp < 0) { return constexpr_pow(1.0/x, -exp); }
