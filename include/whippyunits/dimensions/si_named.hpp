@@ -7,7 +7,7 @@ namespace whippyunits::dimension {
 
     constexpr Dimension frequency           = dimensionless / time;
     constexpr Dimension angle               = dimensionless;
-    constexpr Dimension solid_angle         = dimensionless;
+    constexpr Dimension solid_angle         = angle * angle;
     constexpr Dimension force               = mass * length / time / time;
     constexpr Dimension pressure            = force / length / length;
     constexpr Dimension energy              = force * length;
