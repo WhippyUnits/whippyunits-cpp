@@ -5,7 +5,7 @@
 #include <whippyunits/dimensions/base.hpp>
 #include <whippyunits/concepts.hpp>
 
-namespace whippyunits::dimensions {
+namespace whippyunits::dimension {
 
     constexpr Dimension dimensionless = Dimension(_M(0), _L(0), _T(0), _I(0), _Θ(0), _J(0), _N(0));
     constexpr Dimension mass          = Dimension(_M(1), _L(0), _T(0), _I(0), _Θ(0), _J(0), _N(0));
@@ -20,27 +20,27 @@ namespace whippyunits::dimensions {
 
 namespace whippyunits::concepts {
 
-    template<class Q, typename T>
-    concept Dimensionless = Unscaled<Q, dimensions::dimensionless, T>;
+    template<Unit U>
+    concept Dimensionless = UnscaledUnit<U, dimension::dimensionless>;
 
-    template<class Q, typename T>
-    concept Mass = Unscaled<Q, dimensions::mass, T>;
+    template<Unit U>
+    concept Mass = UnscaledUnit<U, dimension::mass>;
 
-    template<class Q, typename T>
-    concept Length = Unscaled<Q, dimensions::dimensionless, T>;
+    template<Unit U>
+    concept Length = UnscaledUnit<U, dimension::length>;
 
-    template<class Q, typename T>
-    concept Time = Unscaled<Q, dimensions::time, T>;
+    template<Unit U>
+    concept Time = UnscaledUnit<U, dimension::time>;
 
-    template<class Q, typename T>
-    concept Current = Unscaled<Q, dimensions::current, T>;
+    template<Unit U>
+    concept Current = UnscaledUnit<U, dimension::current>;
 
-    template<class Q, typename T>
-    concept Temperature = Unscaled<Q, dimensions::temperature, T>;
+    template<Unit U>
+    concept Temperature = UnscaledUnit<U, dimension::temperature>;
 
-    template<class Q, typename T>
-    concept Luminosity = Unscaled<Q, dimensions::luminosity, T>;
+    template<Unit U>
+    concept Luminosity = UnscaledUnit<U, dimension::luminosity>;
 
-    template<class Q, typename T>
-    concept Substance = Unscaled<Q, dimensions::substance, T>;
+    template<Unit U>
+    concept Substance = UnscaledUnit<U, dimension::substance>;
 }

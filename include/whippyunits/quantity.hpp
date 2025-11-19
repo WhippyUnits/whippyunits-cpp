@@ -26,7 +26,7 @@ namespace whippyunits {
 
         template<Unit U>
         requires (UNIT.dimension == U.dimension)
-        constexpr TYPE in() const {
+        constexpr TYPE value_in() const {
             TYPE ratio = UNIT.scale.template ratio<TYPE>(U.scale);
             return value * ratio;
         }

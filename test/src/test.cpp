@@ -6,16 +6,15 @@
 #include <whippyunits/quantity.hpp>
 #include <whippyunits/concepts.hpp>
 #include <whippyunits/dimensions/base.hpp>
+#include <whippyunits/units/si.hpp>
 //#include "catch_matchers.hpp"
 
 using namespace whippyunits;
+using namespace whippyunits::units;
 
-constexpr Scale base = Scale::_10(0);
-constexpr Unit m = Unit<base, dimensions::length>{};
-constexpr Unit s = Unit<base, dimensions::time>{};
-
-template<concepts::Length<double> Q>
-constexpr auto square(Q value) {
+template<Unit U>
+requires concepts::Length<U>
+constexpr auto square(Quantity<U, double> value) {
     return value * value;
 }
 
@@ -29,9 +28,22 @@ TEST_CASE("Basic test", "[basic]") {
     constexpr Quantity<m> test = 1.0*m;
     constexpr Quantity<m*m> test_sqr = square(test);
 
-    REQUIRE(vel.in<m/s>() == 1.0);
-    REQUIRE(distance.in<m>() == 10.0);
-    REQUIRE(test.in<m>() == 1.0);
-    REQUIRE(test_sqr.in<m*m>() == 1.0);
+    constexpr Quantity<J> test2 = 1.0 * N*m;
+
+    constexpr auto my_mass = 1.0 * kg + (1.0*g).rescale_to<kg>();
+    constexpr double mass_value = my_mass.value_in<milligrams>();
+
+    constexpr Quantity<kV> my_voltage = 1.0*kW/A;
+
+    test2.value_in<J>();
+    my_voltage.value_in<V>();
+
+    //constexpr auto test_sqr_2 = square2(test);
+
+    REQUIRE(vel.value_in<m/s>() == 1.0);
+    REQUIRE(distance.value_in<m>() == 10.0);
+    REQUIRE(test.value_in<m>() == 1.0);
+    REQUIRE(test_sqr.value_in<m*m>() == 1.0);
+    REQUIRE(mass_value <= 1000000.0);
 
 }
