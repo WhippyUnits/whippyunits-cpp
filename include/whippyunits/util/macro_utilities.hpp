@@ -105,18 +105,3 @@
     DEFINE_SINGLE_SI_UNIT(scale::yotta / scale_offset, dimension, yotta, name, Y##symbol, __VA_ARGS__) \
     DEFINE_SINGLE_SI_UNIT(scale::ronna / scale_offset, dimension, ronna, name, R##symbol, __VA_ARGS__) \
     DEFINE_SINGLE_SI_UNIT(scale::quetta / scale_offset, dimension, quetta, name, Q##symbol, __VA_ARGS__)
-
-/*
-    constexpr Scale deca = Scale::_10(1);
-    constexpr Scale hecto = Scale::_10(2);
-    constexpr Scale kilo = Scale::_10(3);
-    constexpr Scale mega = Scale::_10(6);
-    constexpr Scale giga = Scale::_10(9);
-    constexpr Scale tera = Scale::_10(12);
-    constexpr Scale peta = Scale::_10(15);
-    constexpr Scale exa = Scale::_10(18);
-    constexpr Scale zetta = Scale::_10(21);
-    constexpr Scale yotta = Scale::_10(24);
-    constexpr Scale ronna = Scale::_10(27);
-    constexpr Scale quetta = Scale::_10(30);
-*/
