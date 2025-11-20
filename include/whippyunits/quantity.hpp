@@ -4,6 +4,7 @@
 
 #include <type_traits>
 #include <whippyunits/unit.hpp>
+#include <whippyunits/scaled_unit.hpp>
 #include <whippyunits/util/constexpr_utilities.hpp>
 
 namespace whippyunits {
@@ -29,6 +30,13 @@ namespace whippyunits {
         constexpr TYPE value_in() const {
             TYPE ratio = UNIT.scale.template ratio<TYPE>(U.scale);
             return value * ratio;
+        }
+
+        template<ScaledUnit U>
+        requires (UNIT.dimension == U.base.dimension)
+        constexpr TYPE value_in() const {
+            TYPE ratio = UNIT.scale.template ratio<TYPE>(U.base.scale);
+            return value * ratio / U.scale;
         }
     };
 
@@ -57,8 +65,13 @@ namespace whippyunits {
     }
 
     template<typename T, Scale S, Dimension D>
-    constexpr auto operator*(T value, Unit<S, D>) {
-        return Quantity<Unit<S, D>{}, T>{value};
+    constexpr auto operator*(T left, Unit<S, D>) {
+        return Quantity<Unit<S, D>{}, T>{left};
+    }
+
+    template<typename T, Unit U>
+    constexpr auto operator*(T left, ScaledUnit<U> right) {
+        return Quantity<U, T>{static_cast<T>(right.scale * static_cast<long double>(left))};
     }
 
     template<Unit U, Scale S, Dimension D, typename T>
@@ -66,9 +79,19 @@ namespace whippyunits {
         return Quantity<U * Unit<S, D>{}, T>{left.value};
     }
 
+    template<Unit U0, Unit U1, typename T>
+    constexpr auto operator*(Quantity<U0, T> left, ScaledUnit<U1> right) {
+        return Quantity<U0 * U1, T>{static_cast<T>(right.scale * static_cast<long double>(left.value))};
+    }
+
     template<Unit U, Scale S, Dimension D, typename T>
     constexpr auto operator/(Quantity<U, T> left, Unit<S, D>) {
         return Quantity<U / Unit<S, D>{}, T>{left.value};
+    }
+
+    template<Unit U0, Unit U1, typename T>
+    constexpr auto operator/(Quantity<U0, T> left, ScaledUnit<U1> right) {
+        return Quantity<U0 / U1, T>{static_cast<T>(static_cast<long double>(left.value) / right.scale)};
     }
 
 }
