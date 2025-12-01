@@ -2,6 +2,7 @@
 
 #include <whippyunits/affine_unit.hpp>
 #include <whippyunits/quantity.hpp>
+#include <whippyunits/scaled_affine_unit.hpp>
 
 namespace whippyunits {
 
@@ -34,11 +35,22 @@ namespace whippyunits {
             return (value + static_cast<TYPE>(UNIT.offset)) * ratio;
         }
 
+        template<ScaledUnit U>
+        requires (UNIT.base.dimension == U.base.dimension)
+        constexpr TYPE value_in() const {
+            return this->value_in<U.base>() / U.scale;
+        }
+
         template<AffineUnit U>
         requires (UNIT.base.dimension == U.base.dimension)
         constexpr TYPE value_in() const {
-            TYPE ratio = UNIT.base.scale.template ratio<TYPE>(U.base.scale);
-            return (value + static_cast<TYPE>(UNIT.offset)) * ratio - static_cast<TYPE>(U.offset);
+            return this->value_in<U.base>() - static_cast<TYPE>(U.offset);
+        }
+
+        template<ScaledAffineUnit U>
+        requires (UNIT.base.dimension == U.base.base.dimension)
+        constexpr TYPE value_in() const {
+            return this->value_in<U.base>() / U.scale;
         }
     };
 
@@ -63,6 +75,11 @@ namespace whippyunits {
     template<typename T, Unit U, long double O>
     constexpr auto operator*(T left, AffineUnit<U, O>) {
         return AffineQuantity<AffineUnit<U, O>{}, T>{left};
+    }
+
+    template<typename T, AffineUnit U>
+    constexpr auto operator*(T left, ScaledAffineUnit<U> right) {
+        return AffineQuantity<U, T>{static_cast<T>(right.scale * static_cast<long double>(left))};
     }
 
 }

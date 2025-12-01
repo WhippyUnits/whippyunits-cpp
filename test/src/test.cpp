@@ -8,9 +8,15 @@
 #include <whippyunits/dimensions/base.hpp>
 #include <whippyunits/units/si.hpp>
 #include "whippyunits/affine_unit.hpp"
+#include "whippyunits/scaled_affine_unit.hpp"
 #include "whippyunits/scaled_unit.hpp"
 #include <whippyunits/affine_quantity.hpp>
 //#include "catch_matchers.hpp"
+
+/**
+ * This file doesn't really contain tests, more brief checks that certain things result in the way I expect them to.
+ * Proper tests are coming soon
+ */
 
 using namespace whippyunits;
 using namespace whippyunits::units;
@@ -22,6 +28,9 @@ constexpr auto square(Quantity<U, double> value) {
 }
 
 constexpr ScaledUnit ft = ScaledUnit<dm>{3.048l};
+
+constexpr ScaledAffineUnit degrees_fahrenheit = ScaledAffineUnit<AffineUnit<kelvin, 45967.0l/180.0l>{}>{5.0l / 9.0l};
+constexpr auto deg_F = degrees_fahrenheit;
 
 constexpr AffineUnit degrees_celsius = AffineUnit<kelvin, 273.15l>{};
 constexpr auto deg_C = degrees_celsius;
@@ -45,6 +54,15 @@ TEST_CASE("Basic test", "[basic]") {
     constexpr Quantity c_test = 1.0*K;
     constexpr Quantity d_test = b_test - a_test;
     constexpr AffineQuantity e_test = a_test + c_test;
+
+    constexpr AffineQuantity test_a = 32.0 * deg_F;
+    constexpr AffineQuantity test_b = 0.0 * deg_C;
+    constexpr Quantity test_c = 273.15 * K;
+
+    test_a.value_in<K>();
+    test_b.value_in<deg_F>();
+    test_c.value_in<deg_C>();
+    test_c.value_in<deg_F>();
 
     c_test.value_in<deg_C>();
     e_test.value_in<deg_C>();
