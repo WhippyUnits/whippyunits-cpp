@@ -7,7 +7,9 @@
 #include <whippyunits/concepts.hpp>
 #include <whippyunits/dimensions/base.hpp>
 #include <whippyunits/units/si.hpp>
+#include "whippyunits/affine_unit.hpp"
 #include "whippyunits/scaled_unit.hpp"
+#include <whippyunits/affine_quantity.hpp>
 //#include "catch_matchers.hpp"
 
 using namespace whippyunits;
@@ -19,16 +21,10 @@ constexpr auto square(Quantity<U, double> value) {
     return value * value;
 }
 
-// celsius_difference, C_deg = K
-// celsius, deg_C = AffineUnit(C_deg, 273.15)
-// 100.0 * deg_C - 50.0 * deg_C = 50.0 * C_deg
-// 100.0 * deg_C + 50.0 * C_deg = 150.0 * deg_C
-
-// 1.0*ft -> 3.028*dm
-// Quantity<ft> == Quantity<dm>
-// 
-
 constexpr ScaledUnit ft = ScaledUnit<dm>{3.048l};
+
+constexpr AffineUnit degrees_celsius = AffineUnit<kelvin, 273.15l>{};
+constexpr auto deg_C = degrees_celsius;
 
 TEST_CASE("Basic test", "[basic]") {
 
@@ -43,6 +39,17 @@ TEST_CASE("Basic test", "[basic]") {
     constexpr Quantity<J> test2 = 1.0 * N*m;
 
     constexpr Quantity test3 = 1.0*ft/s;
+
+    constexpr AffineQuantity a_test = 1.0 * deg_C;
+    constexpr AffineQuantity b_test = 2.0 * deg_C;
+    constexpr Quantity c_test = 1.0*K;
+    constexpr Quantity d_test = b_test - a_test;
+    constexpr AffineQuantity e_test = a_test + c_test;
+
+    c_test.value_in<deg_C>();
+    e_test.value_in<deg_C>();
+    e_test.value_in<K>();
+    d_test.value_in<K>();
 
     test3.value_in<ft/s>();
 

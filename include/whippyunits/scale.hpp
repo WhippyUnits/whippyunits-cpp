@@ -24,7 +24,7 @@ namespace whippyunits {
             double exp_3 = utils::constexpr_pow(3.0, P3.EXP - other.P3.EXP);
             double exp_5 = utils::constexpr_pow(5.0, P5.EXP - other.P5.EXP);
             double exp_π = utils::constexpr_pow(3.14159265358979323846264338327950288, Pπ.EXP - other.Pπ.EXP);
-            return T(exp_2 * exp_3 * exp_5 * exp_π);
+            return static_cast<T>(exp_2 * exp_3 * exp_5 * exp_π);
         }
     };
     constexpr Scale operator*(Scale left, Scale right) {

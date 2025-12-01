@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <whippyunits/unit.hpp>
 #include <whippyunits/scaled_unit.hpp>
+#include <whippyunits/affine_unit.hpp>
 #include <whippyunits/util/constexpr_utilities.hpp>
 
 namespace whippyunits {
@@ -37,6 +38,13 @@ namespace whippyunits {
         constexpr TYPE value_in() const {
             TYPE ratio = UNIT.scale.template ratio<TYPE>(U.base.scale);
             return value * ratio / U.scale;
+        }
+
+        template<AffineUnit U>
+        requires (UNIT.dimension == U.base.dimension)
+        constexpr TYPE value_in() const {
+            TYPE ratio = UNIT.scale.template ratio<TYPE>(U.base.scale);
+            return value * ratio - static_cast<TYPE>(U.offset);
         }
     };
 
