@@ -150,7 +150,7 @@ namespace whippyunits {
 
     template<Unit U, typename T>
     constexpr bool operator>=(Quantity<U, T> left, ZeroQuantity) {
-        return left.value <= static_cast<T>(0.0);
+        return left.value >= static_cast<T>(0.0);
     }
 
     template<Unit U, typename T>
@@ -161,6 +161,36 @@ namespace whippyunits {
     template<Unit U, typename T>
     constexpr bool operator>=(Quantity<U, T> left, Quantity<U, T> right) {
         return left.value >= right.value;
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<(Quantity<U, T> left, ZeroQuantity) {
+        return left.value < static_cast<T>(0.0);
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<(ZeroQuantity, Quantity<U, T> right) {
+        return right < ZeroQuantity{};
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<(Quantity<U, T> left, Quantity<U, T> right) {
+        return left.value < right.value;
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>(Quantity<U, T> left, ZeroQuantity) {
+        return left.value <= static_cast<T>(0.0);
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>(ZeroQuantity, Quantity<U, T> right) {
+        return right > ZeroQuantity{};
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>(Quantity<U, T> left, Quantity<U, T> right) {
+        return left.value > right.value;
     }
 
 }
