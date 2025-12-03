@@ -11,6 +11,9 @@
 
 namespace whippyunits {
 
+    struct ZeroQuantity {};
+    const constexpr ZeroQuantity ZERO = ZeroQuantity{};
+
     template<Unit _UNIT, typename T = double>
     requires std::is_arithmetic_v<T>
     struct Quantity {
@@ -67,6 +70,10 @@ namespace whippyunits {
     constexpr auto operator*(Quantity<U, T> left, T right) {
         return Quantity<U, T>{left.value * right};
     }
+    template<Unit U, typename T>
+    constexpr auto operator*(T left, Quantity<U, T> right) {
+        return right * left;
+    }
     template<Unit U0, Unit U1, typename T>
     constexpr auto operator*(Quantity<U0, T> left, Quantity<U1, T> right) {
         return Quantity<U0 * U1, T>{left.value * right.value};
@@ -105,6 +112,55 @@ namespace whippyunits {
     template<Unit U0, Unit U1, typename T>
     constexpr auto operator/(Quantity<U0, T> left, ScaledUnit<U1> right) {
         return Quantity<U0 / U1, T>{static_cast<T>(static_cast<long double>(left.value) / right.scale)};
+    }
+
+    constexpr bool operator==(ZeroQuantity, ZeroQuantity) {
+        return true;
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator==(Quantity<U, T> left, ZeroQuantity) {
+        return left.value == static_cast<T>(0.0);
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator==(ZeroQuantity, Quantity<U, T> right) {
+        return right == ZeroQuantity{};
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator==(Quantity<U, T> left, Quantity<U, T> right) {
+        return left.value == right.value;
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<=(Quantity<U, T> left, ZeroQuantity) {
+        return left.value <= static_cast<T>(0.0);
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<=(ZeroQuantity, Quantity<U, T> right) {
+        return right <= ZeroQuantity{};
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator<=(Quantity<U, T> left, Quantity<U, T> right) {
+        return left.value <= right.value;
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>=(Quantity<U, T> left, ZeroQuantity) {
+        return left.value <= static_cast<T>(0.0);
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>=(ZeroQuantity, Quantity<U, T> right) {
+        return right >= ZeroQuantity{};
+    }
+
+    template<Unit U, typename T>
+    constexpr bool operator>=(Quantity<U, T> left, Quantity<U, T> right) {
+        return left.value >= right.value;
     }
 
 }

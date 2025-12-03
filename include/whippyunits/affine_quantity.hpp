@@ -82,4 +82,19 @@ namespace whippyunits {
         return AffineQuantity<U, T>{static_cast<T>(right.scale * static_cast<long double>(left))};
     }
 
+    template<AffineUnit U, typename T>
+    constexpr bool operator==(AffineQuantity<U, T> left, AffineQuantity<U, T> right) {
+        return left.value == right.value;
+    }
+
+    template<AffineUnit U, typename T>
+    constexpr bool operator<=(AffineQuantity<U, T> left, AffineQuantity<U, T> right) {
+        return left.value <= right.value;
+    }
+
+    template<AffineUnit U, typename T>
+    constexpr bool operator>=(AffineQuantity<U, T> left, AffineQuantity<U, T> right) {
+        return left.value >= right.value;
+    }
+
 }

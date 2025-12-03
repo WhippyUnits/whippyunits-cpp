@@ -7,9 +7,9 @@ namespace whippyunits::dimension {
 
     constexpr Dimension frequency           = dimensionless / time;
     constexpr Dimension angle               = dimensionless;
-    constexpr Dimension solid_angle         = angle * angle;
-    constexpr Dimension force               = mass * length / time / time;
-    constexpr Dimension pressure            = force / length / length;
+    constexpr Dimension solid_angle         = angle ^ 2;
+    constexpr Dimension force               = mass * length / (time ^ 2);
+    constexpr Dimension pressure            = force / (length ^ 2);
     constexpr Dimension energy              = force * length;
     constexpr Dimension power               = energy / time;
     constexpr Dimension charge              = current * time;
@@ -18,10 +18,10 @@ namespace whippyunits::dimension {
     constexpr Dimension resistance          = voltage / current;
     constexpr Dimension conductance         = dimensionless / resistance;
     constexpr Dimension magnetic_flux       = energy / current;
-    constexpr Dimension magnetic_induction  = magnetic_flux / length / length;
+    constexpr Dimension magnetic_induction  = magnetic_flux / (length ^ 2);
     constexpr Dimension inductance          = resistance * time;
     constexpr Dimension luminous_flux       = luminosity * solid_angle;
-    constexpr Dimension illuminance         = luminous_flux / length / length;
+    constexpr Dimension illuminance         = luminous_flux / (length ^ 2);
     constexpr Dimension radioactivity       = dimensionless / time;
     constexpr Dimension absorbed_dose       = energy / mass;
     constexpr Dimension equivalent_dose     = energy / mass;

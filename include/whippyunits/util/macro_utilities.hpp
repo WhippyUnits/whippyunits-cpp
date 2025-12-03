@@ -8,6 +8,16 @@
 #define _EX2(...) _EX1(_EX1(_EX1(_EX1(__VA_ARGS__))))
 #define _EX1(...) __VA_ARGS__
 
+#define DEFINE_UNIT(dimension, unit_scale, primary, ...) \
+    constexpr Unit primary = Unit<unit_scale, dimension>{}; \
+    __VA_OPT__(_EX(_UNIT_HELPER(primary, __VA_ARGS__)))
+
+#define _UNIT_HELPER(primary, alias, ...) \
+    constexpr Unit alias = primary; \
+    __VA_OPT__(_UNIT_HELPER_2 PARENS (primary, __VA_ARGS__))
+
+#define _UNIT_HELPER_2() _UNIT_HELPER
+
 #define DEFINE_SINGLE_SI_UNIT(scale, dimension, prefix, primary, symbol, ...)   \
     constexpr Unit prefix##primary = Unit<scale, dimension>{};                  \
     constexpr Unit symbol = prefix##primary;                                    \
@@ -18,6 +28,36 @@
     __VA_OPT__(_SI_UNIT_HELPER_2 PARENS (primary, prefix, __VA_ARGS__))
 
 #define _SI_UNIT_HELPER_2() _SI_UNIT_HELPER
+
+#define DEFINE_SCALED_UNIT(dimension, unit_scale, scale, primary, ...) \
+    constexpr ScaledUnit primary = ScaledUnit<Unit<unit_scale, dimension>{}>{scale}; \
+    __VA_OPT__(_EX(_SCALED_UNIT_HELPER(primary, __VA_ARGS__)))
+
+#define _SCALED_UNIT_HELPER(primary, alias, ...) \
+    constexpr ScaledUnit alias = primary; \
+    __VA_OPT__(_SCALED_UNIT_HELPER_2 PARENS (primary, __VA_ARGS__))
+
+#define _SCALED_UNIT_HELPER_2() _SCALED_UNIT_HELPER
+
+#define DEFINE_AFFINE_UNIT(dimension, unit_scale, offset, primary, ...) \
+    constexpr AffineUnit primary = AffineUnit<Unit<unit_scale, dimension>{}, offset>{}; \
+    __VA_OPT__(_EX(_AFFINE_UNIT_HELPER(primary, __VA_ARGS__)))
+
+#define _AFFINE_UNIT_HELPER(primary, alias, ...) \
+    constexpr AffineUnit alias = primary; \
+    __VA_OPT__(_AFFINE_UNIT_HELPER_2 PARENS (primary, __VA_ARGS__))
+
+#define _AFFINE_UNIT_HELPER_2() _AFFINE_UNIT_HELPER
+
+#define DEFINE_SCALED_AFFINE_UNIT(dimension, unit_scale, scale, offset, primary, ...) \
+    constexpr ScaledAffineUnit primary = ScaledAffineUnit<AffineUnit<Unit<unit_scale, dimension>{}, offset>{}>{scale}; \
+    __VA_OPT__(_EX(_SCALED_AFFINE_UNIT_HELPER(primary, __VA_ARGS__)))
+
+#define _SCALED_AFFINE_UNIT_HELPER(primary, alias, ...) \
+    constexpr ScaledAffineUnit alias = primary; \
+    __VA_OPT__(_SCALED_AFFINE_UNIT_HELPER_2 PARENS (primary, __VA_ARGS__))
+
+#define _SCALED_AFFINE_UNIT_HELPER_2() _SCALED_AFFINE_UNIT_HELPER
 
 #define DEFINE_SI_UNIT(dimension, name, symbol, ...)                                        \
     DEFINE_SINGLE_SI_UNIT(scale::base, dimension,, name, symbol, __VA_ARGS__)               \

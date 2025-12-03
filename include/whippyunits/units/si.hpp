@@ -3,6 +3,7 @@
 #include <whippyunits/si_scales.hpp>
 #include <whippyunits/dimensions/si_named.hpp>
 #include <whippyunits/util/macro_utilities.hpp>
+#include "whippyunits/dimensions/base.hpp"
 
 namespace whippyunits::units {
 
@@ -37,5 +38,8 @@ namespace whippyunits::units {
     DEFINE_SI_UNIT(dimension::absorbed_dose, gray, Gy, grays);
     DEFINE_SI_UNIT(dimension::equivalent_dose, sievert, Sv, sieverts);
     DEFINE_SI_UNIT(dimension::catalytic_activity, katal, kat, katals);
+
+    DEFINE_UNIT(dimension::temperature, scale::base, celsius_degree, celsius_degrees, C_deg);
+    DEFINE_AFFINE_UNIT(dimension::temperature, scale::base, 273.15l, degree_celsius, degrees_celsius, deg_C);
 
 }

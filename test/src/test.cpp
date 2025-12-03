@@ -4,13 +4,12 @@
 
 #include <catch2/matchers/catch_matchers.hpp>
 #include <whippyunits/quantity.hpp>
+#include <whippyunits/affine_quantity.hpp>
 #include <whippyunits/concepts.hpp>
 #include <whippyunits/dimensions/base.hpp>
 #include <whippyunits/units/si.hpp>
-#include "whippyunits/affine_unit.hpp"
-#include "whippyunits/scaled_affine_unit.hpp"
-#include "whippyunits/scaled_unit.hpp"
-#include <whippyunits/affine_quantity.hpp>
+#include <whippyunits/units/customary.hpp>
+#include "whippyunits/dimension.hpp"
 //#include "catch_matchers.hpp"
 
 /**
@@ -27,13 +26,11 @@ constexpr auto square(Quantity<U, double> value) {
     return value * value;
 }
 
-constexpr ScaledUnit ft = ScaledUnit<dm>{3.048l};
-
-constexpr ScaledAffineUnit degrees_fahrenheit = ScaledAffineUnit<AffineUnit<kelvin, 45967.0l/180.0l>{}>{5.0l / 9.0l};
-constexpr auto deg_F = degrees_fahrenheit;
-
-constexpr AffineUnit degrees_celsius = AffineUnit<kelvin, 273.15l>{};
-constexpr auto deg_C = degrees_celsius;
+template<Unit U>
+requires concepts::UnscaledUnit<U, dimension::voltage / (dimension::length / dimension::time)>
+constexpr ZeroQuantity do_something(Quantity<U, double> value) {
+    return value * ZERO;
+}
 
 TEST_CASE("Basic test", "[basic]") {
 
